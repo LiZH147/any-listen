@@ -1,4 +1,4 @@
-import { appState } from '@/app'
+import { appState, updateSetting } from '@/app'
 import { isLinux } from '@/shared/utils'
 
 import {
@@ -74,6 +74,14 @@ export const handleConfigUpdated = (keys: Array<keyof AnyListen.AppSetting>, set
         setResizeable(appState.appSetting['desktopLyric.mode'] === 'multiLine')
       }
     }
+    // 小窗模式是常驻悬浮的播放器，切到该模式时默认开启置顶，否则会被其它窗口挡住
+    if (
+      keys.includes('desktopLyric.mode') &&
+      appState.appSetting['desktopLyric.mode'] === 'miniPlayer' &&
+      !appState.appSetting['desktopLyric.isAlwaysOnTop']
+    ) {
+      void updateSetting({ 'desktopLyric.isAlwaysOnTop': true })
+    }
     if (keys.includes('desktopLyric.isLockScreen') && winLyricState.isLockScreen != setting['desktopLyric.isLockScreen']!) {
       winLyricState.isLockScreen = setting['desktopLyric.isLockScreen']!
       if (winLyricState.isLockScreen) {
@@ -85,6 +93,13 @@ export const handleConfigUpdated = (keys: Array<keyof AnyListen.AppSetting>, set
             y: 0,
             w: classicSize.width,
             h: classicSize.height,
+          }
+        } else if (appState.appSetting['desktopLyric.mode'] === 'miniPlayer') {
+          newBounds = {
+            x: 0,
+            y: 0,
+            w: appState.appSetting['desktopLyric.miniPlayer.width'],
+            h: appState.appSetting['desktopLyric.miniPlayer.height'],
           }
         } else {
           newBounds = {

@@ -588,6 +588,7 @@ if (import.meta.env.VITE_IS_DESKTOP) {
         enum: [
           { value: 'classic', name: 'settings.desktop_lyric.classic_mode' },
           { value: 'multiLine', name: 'settings.desktop_lyric.multiLine_mode' },
+          { value: 'miniPlayer', name: 'settings.desktop_lyric.miniPlayer_mode' },
         ] satisfies Array<{ value: AnyListen.AppSetting['desktopLyric.mode']; name: keyof Message }>,
       },
 
@@ -733,6 +734,21 @@ if (import.meta.env.VITE_IS_DESKTOP) {
         name: 'settings.desktop_lyric.color',
         type: 'component',
         component: async () => import('./DesktopLyricTheme.svelte'),
+      },
+
+      {
+        type: 'hr',
+        name: 'settings.desktop_lyric.miniPlayer',
+      },
+      {
+        field: 'desktopLyric.miniPlayer.showLyric',
+        name: 'settings.desktop_lyric.miniPlayer_show_lyric',
+        type: 'boolean',
+      },
+      {
+        name: 'settings.desktop_lyric.miniPlayer_opacity',
+        type: 'component',
+        component: async () => import('./DesktopLyricMiniPlayerOpacity.svelte'),
       },
     ],
   })

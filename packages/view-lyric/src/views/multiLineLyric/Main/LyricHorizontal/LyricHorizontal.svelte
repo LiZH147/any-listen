@@ -95,6 +95,9 @@
     contain: strict;
     overflow: hidden;
     font-size: var(--lrc-font-size, 16px);
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask-image: linear-gradient(transparent 0%, #fff 16%, #fff 84%, transparent 100%);
+    mask-image: linear-gradient(transparent 0%, #fff 16%, #fff 84%, transparent 100%);
     // text-align: center;
     cursor: move;
     // font-weight: bold;

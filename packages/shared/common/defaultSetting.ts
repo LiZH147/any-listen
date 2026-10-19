@@ -118,6 +118,14 @@ const defaultSetting: AnyListen.AppSetting = {
   'desktopLyric.multiLine.style.isFontWeightLine': true,
   'desktopLyric.multiLine.style.isFontWeightExtended': true,
 
+  // 小窗（迷你播放器）模式
+  'desktopLyric.miniPlayer.width': 320,
+  'desktopLyric.miniPlayer.height': 112,
+  'desktopLyric.miniPlayer.x': null,
+  'desktopLyric.miniPlayer.y': null,
+  'desktopLyric.miniPlayer.opacity': 100,
+  'desktopLyric.miniPlayer.showLyric': true,
+
   'sync.webdav.enable': false,
   'sync.webdav.debugEnable': false,
   'sync.webdav.url': '',

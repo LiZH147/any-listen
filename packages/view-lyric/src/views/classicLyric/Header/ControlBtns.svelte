@@ -18,7 +18,8 @@
 <style lang="less">
   .btns {
     display: flex;
-    flex-flow: row wrap;
+    flex-flow: row nowrap;
+    gap: 2px;
     align-items: center;
 
     :global {
@@ -26,17 +27,33 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        min-height: 38px;
-        padding: 0 10px;
-        color: #fff;
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        color: rgb(255 255 255 / 82%);
         cursor: pointer;
         outline: none;
         background: none;
         border: none;
-        transition: opacity @transition-normal;
+        border-radius: 999px;
+        transition:
+          background-color @transition-fast,
+          color @transition-fast,
+          transform @transition-fast;
+
+        svg {
+          width: 18px;
+          height: 18px;
+        }
 
         &:hover {
-          opacity: 0.7;
+          color: #fff;
+          background-color: rgb(255 255 255 / 16%);
+          transform: scale(1.08);
+        }
+
+        &:active {
+          transform: scale(0.94);
         }
       }
     }

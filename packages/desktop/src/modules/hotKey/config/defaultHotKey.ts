@@ -5,6 +5,7 @@ const local: AnyListen.HotKey.HotKeyConfig = {
   enable: true,
   keys: {
     'mod+f5': 'playToggle',
+    space: 'playToggle',
     'mod+arrowleft': 'previous',
     'mod+arrowright': 'next',
     f1: 'focusSearchInput',

@@ -381,7 +381,7 @@ declare global {
       /**
        * 桌面歌词模式
        */
-      'desktopLyric.mode': 'classic' | 'multiLine'
+      'desktopLyric.mode': 'classic' | 'multiLine' | 'miniPlayer'
 
       /**
        * 桌面歌词窗口x坐标
@@ -550,6 +550,36 @@ declare global {
        * 是否加粗翻译、罗马音字体
        */
       'desktopLyric.multiLine.style.isFontWeightExtended': boolean
+
+      /**
+       * 小窗模式窗口宽度
+       */
+      'desktopLyric.miniPlayer.width': number
+
+      /**
+       * 小窗模式窗口高度
+       */
+      'desktopLyric.miniPlayer.height': number
+
+      /**
+       * 小窗模式窗口x坐标
+       */
+      'desktopLyric.miniPlayer.x': number | null
+
+      /**
+       * 小窗模式窗口y坐标
+       */
+      'desktopLyric.miniPlayer.y': number | null
+
+      /**
+       * 小窗模式窗口透明度
+       */
+      'desktopLyric.miniPlayer.opacity': number
+
+      /**
+       * 小窗模式是否显示歌词
+       */
+      'desktopLyric.miniPlayer.showLyric': boolean
 
       /**
        * 下载路径

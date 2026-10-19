@@ -43,9 +43,9 @@
     display: flex;
     flex: none;
     flex-flow: row nowrap;
-    gap: 15px;
-    padding-right: 10px;
-    padding-left: 20px;
+    gap: 6px;
+    padding-right: 8px;
+    padding-left: 12px;
 
     //   button {
     //     color: var(--color-button-font);

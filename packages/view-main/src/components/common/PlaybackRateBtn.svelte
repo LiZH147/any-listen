@@ -25,7 +25,7 @@
 
 <PopupBtn onwheel={handleWheel} aria-label={$t('player__playback_rate', { rate: playbackRate.val })}>
   <div class="icon" class:active={playbackRate.val != 1}>
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-speed" />
     </svg>
   </div>
@@ -56,33 +56,46 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    // color: var(--color-button-font);
     justify-content: center;
-    width: 24px;
+    width: 34px;
+    height: 34px;
     padding: 0;
+    color: var(--color-button-font);
     cursor: pointer;
-    transition: color @transition-normal;
+    border-radius: 50%;
+    transition:
+      background-color @transition-fast,
+      color @transition-fast,
+      transform @transition-fast;
 
     svg {
-      opacity: 0.5;
-      filter: drop-shadow(0 0 1px rgb(0 0 0 / 20%));
-      transition: @transition-fast;
-      transition-property: opacity, color;
+      width: 20px;
+      height: 20px;
+      opacity: 0.78;
+      transition: opacity @transition-fast;
     }
+
     &:hover {
-      svg {
-        opacity: 0.9;
-      }
-    }
-    &:active {
+      background-color: rgb(127 127 127 / 16%);
+      transform: scale(1.06);
+
       svg {
         opacity: 1;
       }
     }
+
+    &:active {
+      transform: scale(0.94);
+
+      svg {
+        opacity: 1;
+      }
+    }
+
     &.active {
       svg {
         color: var(--color-primary);
-        opacity: 0.8;
+        opacity: 0.95;
       }
     }
   }

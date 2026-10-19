@@ -100,6 +100,9 @@
     font-size: var(--lrc-font-size, 16px);
     cursor: move;
     writing-mode: vertical-rl;
+    /* stylelint-disable-next-line property-no-vendor-prefix */
+    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #fff 16%, #fff 84%, transparent 100%);
+    mask-image: linear-gradient(90deg, transparent 0%, #fff 16%, #fff 84%, transparent 100%);
 
     &::-webkit-scrollbar {
       height: 0;

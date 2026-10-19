@@ -17,6 +17,6 @@
     display: flex;
     flex: none;
     flex-flow: row nowrap;
-    gap: 15px;
+    gap: 8px;
   }
 </style>

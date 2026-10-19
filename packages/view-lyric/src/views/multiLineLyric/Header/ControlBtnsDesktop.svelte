@@ -58,28 +58,28 @@
 </script>
 
 <button class="btn" title={$t('desktop_lyric.close')} onclick={handleClose}>
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <use xlink:href="#icon-close" />
   </svg>
 </button>
 <button class="btn" title={$t(`desktop_lyric.${setting.val['desktopLyric.isLock'] ? 'unlock' : 'lock'}`)} onclick={handleLock}>
   {#if setting.val['desktopLyric.isLock']}
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-unlock" />
     </svg>
   {:else}
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-lock" />
     </svg>
   {/if}
 </button>
 <button class="btn" title={$t('desktop_lyric.font_increase')} onclick={async () => handleFontChange('increase', 1)}>
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <use xlink:href="#icon-font-increase" />
   </svg>
 </button>
 <button class="btn" title={$t('desktop_lyric.font_decrease')} onclick={async () => handleFontChange('decrease', 1)}>
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <use xlink:href="#icon-font-decrease" />
   </svg>
 </button>
@@ -92,7 +92,7 @@
     void handleOpacityChange('increase', 2)
   }}
 >
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <use xlink:href="#icon-opactiy-increase" />
   </svg>
 </button>
@@ -105,7 +105,7 @@
     void handleOpacityChange('decrease', 2)
   }}
 >
-  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+  <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
     <use xlink:href="#icon-opactiy-decrease" />
   </svg>
 </button>
@@ -117,11 +117,11 @@
   onclick={handleZoomLrc}
 >
   {#if setting.val['desktopLyric.multiLine.style.isZoomActiveLrc']}
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-vibrate-off" />
     </svg>
   {:else}
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-vibrate" />
     </svg>
   {/if}
@@ -132,11 +132,11 @@
   onclick={handleAlwaysOnTop}
 >
   {#if setting.val['desktopLyric.isAlwaysOnTop']}
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-top-off" />
     </svg>
   {:else}
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="20px" viewBox="0 0 24 24">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
       <use xlink:href="#icon-top-on" />
     </svg>
   {/if}

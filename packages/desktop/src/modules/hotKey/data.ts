@@ -20,9 +20,16 @@ export const getHotKeyConfig = async (): Promise<AnyListen.HotKey.HotKeyConfigAl
     localConfig = cloneData(defaultHotKey.local)
     globalConfig = cloneData(defaultHotKey.global)
 
-    storeHotKey.set('version', 1)
+    storeHotKey.set('version', 2)
     storeHotKey.set('local', localConfig)
     storeHotKey.set('global', globalConfig)
+  } else if (version < 2) {
+    // v2：新增空格键切换播放/暂停；若用户未占用 space 键则自动补上默认绑定
+    if (localConfig && !('space' in localConfig.keys)) {
+      localConfig.keys.space = 'playToggle'
+      storeHotKey.set('local', localConfig)
+    }
+    storeHotKey.set('version', 2)
   }
 
   return {

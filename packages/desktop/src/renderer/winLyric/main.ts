@@ -21,17 +21,54 @@ const saveBoundsConfig = debounce((config: Partial<AnyListen.AppSetting>) => {
 }, 500)
 
 const buildConfig = (bounds: { x: number; y: number; width: number; height: number }): Partial<AnyListen.AppSetting> => {
-  return appState.appSetting['desktopLyric.mode'] === 'classic'
-    ? {
+  switch (appState.appSetting['desktopLyric.mode']) {
+    case 'classic':
+      return {
         'desktopLyric.classic.x': bounds.x,
         'desktopLyric.classic.y': bounds.y,
       }
-    : {
+    case 'miniPlayer':
+      return {
+        'desktopLyric.miniPlayer.x': bounds.x,
+        'desktopLyric.miniPlayer.y': bounds.y,
+        'desktopLyric.miniPlayer.width': bounds.width,
+        'desktopLyric.miniPlayer.height': bounds.height,
+      }
+    default:
+      return {
         'desktopLyric.multiLine.x': bounds.x,
         'desktopLyric.multiLine.y': bounds.y,
         'desktopLyric.multiLine.width': bounds.width,
         'desktopLyric.multiLine.height': bounds.height,
       }
+  }
+}
+
+// 读取当前模式已保存的窗口位置，用于在 Windows 下纠正非主动的窗口移动
+const getSavedBounds = (): Electron.Rectangle => {
+  switch (appState.appSetting['desktopLyric.mode']) {
+    case 'classic':
+      return {
+        x: appState.appSetting['desktopLyric.classic.x'] ?? 0,
+        y: appState.appSetting['desktopLyric.classic.y'] ?? 0,
+        width: browserWindow?.getBounds().width ?? minWidth,
+        height: browserWindow?.getBounds().height ?? minHeight,
+      }
+    case 'miniPlayer':
+      return {
+        x: appState.appSetting['desktopLyric.miniPlayer.x'] ?? 0,
+        y: appState.appSetting['desktopLyric.miniPlayer.y'] ?? 0,
+        width: appState.appSetting['desktopLyric.miniPlayer.width'],
+        height: appState.appSetting['desktopLyric.miniPlayer.height'],
+      }
+    default:
+      return {
+        x: appState.appSetting['desktopLyric.multiLine.x'] ?? 0,
+        y: appState.appSetting['desktopLyric.multiLine.y'] ?? 0,
+        width: appState.appSetting['desktopLyric.multiLine.width'],
+        height: appState.appSetting['desktopLyric.multiLine.height'],
+      }
+  }
 }
 
 const winEvent = () => {
@@ -57,19 +94,7 @@ const winEvent = () => {
     } else if (import.meta.env.VITE_IS_WINDOWS) {
       // Linux 不允许将窗口设置出屏幕之外，MacOS未知，故只在Windows下执行强制设置
       // 非主动调整窗口触发的窗口位置变化将重置回设置值
-      browserWindow!.setBounds(
-        appState.appSetting['desktopLyric.mode'] === 'classic'
-          ? {
-              x: appState.appSetting['desktopLyric.classic.x'] ?? 0,
-              y: appState.appSetting['desktopLyric.classic.y'] ?? 0,
-            }
-          : {
-              x: appState.appSetting['desktopLyric.multiLine.x'] ?? 0,
-              y: appState.appSetting['desktopLyric.multiLine.y'] ?? 0,
-              width: appState.appSetting['desktopLyric.multiLine.width'],
-              height: appState.appSetting['desktopLyric.multiLine.height'],
-            }
-      )
+      browserWindow!.setBounds(getSavedBounds())
     }
   })
 

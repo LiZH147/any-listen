@@ -20,7 +20,7 @@
   }}
 >
   <div class="icon">
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 192 192">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192">
       <use xlink:href="#icon-playlist" />
     </svg>
   </div>
@@ -48,25 +48,37 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    // color: var(--color-button-font);
     justify-content: center;
-    width: 24px;
+    width: 34px;
+    height: 34px;
     padding: 0;
+    color: var(--color-button-font);
     cursor: pointer;
-    transition: color @transition-normal;
+    border-radius: 50%;
+    transition:
+      background-color @transition-fast,
+      color @transition-fast,
+      transform @transition-fast;
 
     svg {
-      opacity: 0.5;
-      transition: @transition-fast;
-      transition-property: opacity, color;
-      // filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
+      width: 20px;
+      height: 20px;
+      opacity: 0.78;
+      transition: opacity @transition-fast;
     }
+
     &:hover {
+      background-color: rgb(127 127 127 / 16%);
+      transform: scale(1.06);
+
       svg {
-        opacity: 0.9;
+        opacity: 1;
       }
     }
+
     &:active {
+      transform: scale(0.94);
+
       svg {
         opacity: 1;
       }

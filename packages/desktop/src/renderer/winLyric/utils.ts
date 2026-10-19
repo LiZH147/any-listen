@@ -126,6 +126,46 @@ export const getClassicWindowSize = () => {
   }
 }
 
+const initMiniPlayerWindowSize = () => {
+  let x = appState.appSetting['desktopLyric.miniPlayer.x']
+  let y = appState.appSetting['desktopLyric.miniPlayer.y']
+  let width = appState.appSetting['desktopLyric.miniPlayer.width']
+  let height = appState.appSetting['desktopLyric.miniPlayer.height']
+
+  if (width < minWidth) width = minWidth
+  if (height < minHeight) height = minHeight
+
+  if (x == null || y == null) {
+    if (appState.envParams.workAreaSize) {
+      x = appState.envParams.workAreaSize.width - width - 24
+      y = appState.envParams.workAreaSize.height - height - 24
+    } else {
+      x = 0
+      y = 0
+    }
+  } else {
+    const bounds = getLyricWindowBounds({ x, y, width, height }, { x: 0, y: 0, w: width, h: height })
+    x = bounds.x
+    y = bounds.y
+    width = bounds.width
+    height = bounds.height
+  }
+
+  return {
+    x: Math.trunc(x),
+    y: Math.trunc(y),
+    width: Math.trunc(width),
+    height: Math.trunc(height),
+  }
+}
+
 export const initWindowSize = () => {
-  return appState.appSetting['desktopLyric.mode'] === 'classic' ? getClassicWindowSize() : initMultiLineWindowSize()
+  switch (appState.appSetting['desktopLyric.mode']) {
+    case 'classic':
+      return getClassicWindowSize()
+    case 'miniPlayer':
+      return initMiniPlayerWindowSize()
+    default:
+      return initMultiLineWindowSize()
+  }
 }

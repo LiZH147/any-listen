@@ -17,23 +17,23 @@
 <PopupBtn bind:this={popup} aria-label={nextTogglePlay.name}>
   <div class="btn">
     {#if togglePlayMethod.val == 'listLoop'}
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="80%" viewBox="0 0 24 24">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <use xlink:href="#icon-list-loop" />
       </svg>
     {:else if togglePlayMethod.val == 'random'}
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <use xlink:href="#icon-list-random" />
       </svg>
     {:else if togglePlayMethod.val == 'singleLoop'}
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <use xlink:href="#icon-list-single-loop" />
       </svg>
     {:else if togglePlayMethod.val == 'list'}
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <use xlink:href="#icon-list-order" />
       </svg>
     {:else if togglePlayMethod.val == 'none'}
-      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+      <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
         <use xlink:href="#icon-unavailable" />
       </svg>
     {/if}
@@ -47,7 +47,7 @@
           toggleMode('listLoop')
         }}
       >
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 24 24">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <use xlink:href="#icon-list-loop" />
         </svg>
       </button>
@@ -58,7 +58,7 @@
           toggleMode('random')
         }}
       >
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <use xlink:href="#icon-list-random" />
         </svg>
       </button>
@@ -69,7 +69,7 @@
           toggleMode('list')
         }}
       >
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 32 32">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <use xlink:href="#icon-list-order" />
         </svg>
       </button>
@@ -80,7 +80,7 @@
           toggleMode('singleLoop')
         }}
       >
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <use xlink:href="#icon-list-single-loop" />
         </svg>
       </button>
@@ -91,7 +91,7 @@
           toggleMode('none')
         }}
       >
-        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" width="100%" viewBox="0 0 24 24">
+        <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
           <use xlink:href="#icon-unavailable" />
         </svg>
       </button>
@@ -105,26 +105,39 @@
     display: flex;
     flex-flow: column nowrap;
     align-items: center;
-    // color: var(--color-button-font);
     justify-content: center;
-    width: 24px;
+    width: 34px;
+    height: 34px;
     padding: 0;
+    color: var(--color-button-font);
     cursor: pointer;
     background-color: transparent;
     border: none;
-    transition: color @transition-normal;
+    border-radius: 50%;
+    transition:
+      background-color @transition-fast,
+      color @transition-fast,
+      transform @transition-fast;
 
     svg {
-      opacity: 0.5;
+      width: 20px;
+      height: 20px;
+      opacity: 0.78;
       transition: opacity @transition-fast;
-      // filter: drop-shadow(0 0 1px rgba(0, 0, 0, 0.2));
     }
+
     &:hover {
+      background-color: rgb(127 127 127 / 16%);
+      transform: scale(1.06);
+
       svg {
-        opacity: 0.9;
+        opacity: 1;
       }
     }
+
     &:active {
+      transform: scale(0.94);
+
       svg {
         opacity: 1;
       }

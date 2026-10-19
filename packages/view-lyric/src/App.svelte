@@ -11,15 +11,25 @@
   const appReady = useAppAeady()
 
   const lock = useSettingValue('desktopLyric.isLock')
+  const mode = useSettingValue('desktopLyric.mode')
   const pauseHide = usePauseHide()
   const hoverHide = useHoverHide()
+
+  // 小窗模式是常驻悬浮的播放器，暂停时不应隐藏，否则窗口会直接消失
+  const isMiniPlayer = $derived(mode.val === 'miniPlayer')
 
   onMount(() => {
     document.getElementById('root')!.style.display = 'block'
   })
 </script>
 
-<div id="container" class="view-container" class:lock={lock.val} class:hide={pauseHide.val || hoverHide.val}>
+<div
+  id="container"
+  class="view-container"
+  class:lock={lock.val}
+  class:mini={isMiniPlayer}
+  class:hide={!isMiniPlayer && (pauseHide.val || hoverHide.val)}
+>
   <Icons />
   <div id="main">
     {#if import.meta.env.VITE_IS_DESKTOP}

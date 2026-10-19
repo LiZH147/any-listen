@@ -21,9 +21,11 @@
     // border-radius: 6px;
     contain: strict;
     background-color: var(--color-primary-light-300-alpha-800);
-    border: 1px solid var(--color-primary-alpha-800);
-    border-radius: 6px;
-    box-shadow: 0 0 6px var(--color-primary-dark-200-alpha-600);
+    border: 1px solid var(--color-primary-alpha-700);
+    border-radius: 12px;
+    box-shadow:
+      0 10px 36px rgb(0 0 0 / 40%),
+      0 0 22px var(--color-primary-alpha-400);
     // opacity: 0.8;
     // backdrop-filter: blur(4px);
 

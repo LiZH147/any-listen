@@ -25,7 +25,7 @@
     }}
     aria-label={toggleDesktopLyricBtnTitle}
   >
-    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" height="100%" viewBox="0 0 480.29 365.42">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480.29 365.42">
       <use xlink:href={`#icon-lrc_${desktopLyricEnable.val ? 'on' : 'off'}`} />
     </svg>
   </Btn>
@@ -42,21 +42,40 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      width: 24px;
-      height: 24px;
+      width: 34px;
+      height: 34px;
       padding: 0;
       color: inherit !important;
-      opacity: 0.55;
-      transition: opacity @transition-normal;
+      border-radius: 50%;
+      opacity: 0.9;
+      transition:
+        background-color @transition-fast,
+        opacity @transition-fast,
+        transform @transition-fast;
 
       svg {
-        filter: drop-shadow(0 0 1px rgb(0 0 0 / 20%));
+        width: 20px;
+        height: 20px;
+        opacity: 0.78;
+        transition: opacity @transition-fast;
       }
+
       &:hover {
-        opacity: 0.9;
-      }
-      &:active {
+        background-color: rgb(127 127 127 / 16%);
         opacity: 1;
+        transform: scale(1.06);
+
+        svg {
+          opacity: 1;
+        }
+      }
+
+      &:active {
+        transform: scale(0.94);
+
+        svg {
+          opacity: 1;
+        }
       }
     }
   }

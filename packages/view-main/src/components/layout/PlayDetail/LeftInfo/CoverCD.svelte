@@ -63,11 +63,11 @@
     padding: 5%;
     contain: strict;
     background-color: var(--color-primary-light-300-alpha-800);
-    border-radius: 6px;
-    box-shadow: 0 0 6px var(--color-primary-alpha-500);
-    // box-shadow: 0 0 6px var(--color-primary-alpha-500);
-    // border-radius: 6px;
-    opacity: 0.8;
+    border-radius: 12px;
+    box-shadow:
+      0 10px 36px rgb(0 0 0 / 38%),
+      0 0 22px var(--color-primary-alpha-400);
+    opacity: 0.95;
     backdrop-filter: blur(4px);
 
     .mixin-dot(@color: var(--color-primary-light-300-alpha-800)) {

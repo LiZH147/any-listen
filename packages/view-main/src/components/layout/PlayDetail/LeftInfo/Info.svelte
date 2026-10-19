@@ -19,12 +19,23 @@
     min-height: 0;
     margin-top: 15px;
     p {
-      font-size: 16px;
-      line-height: 1.5;
+      font-size: 15px;
+      line-height: 1.7;
       overflow-wrap: break-word;
+      margin: 3px 0;
+      &:first-child {
+        margin-top: 0;
+        font-size: 24px;
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        span {
+          font-size: 14px;
+          font-weight: normal;
+        }
+      }
 
       span {
-        font-size: 14px;
+        font-size: 13px;
         color: var(--color-font-label);
       }
     }

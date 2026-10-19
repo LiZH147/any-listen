@@ -7,7 +7,9 @@
 
 {#if !lock.val}
   <header class="header" transition:fade>
-    <ControlBtns />
+    <div class="bar">
+      <ControlBtns />
+    </div>
   </header>
 {/if}
 
@@ -21,7 +23,23 @@
     flex: none;
     flex-flow: row nowrap;
     justify-content: flex-end;
-    background-color: rgb(0 0 0 / 70%);
-    border-bottom-left-radius: @radius-border;
+    padding: 8px;
+    pointer-events: none;
+  }
+
+  // 悬浮圆角胶囊：替代原来的左上角黑条
+  .bar {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    padding: 4px 8px;
+    pointer-events: auto;
+    background-color: rgb(28 28 30 / 72%);
+    backdrop-filter: blur(16px) saturate(1.4);
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 999px;
+    box-shadow:
+      0 8px 28px rgb(0 0 0 / 42%),
+      0 1px 0 rgb(255 255 255 / 8%) inset;
   }
 </style>

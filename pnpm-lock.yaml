@@ -3944,7 +3944,7 @@ packages:
     resolution: {integrity: sha512-PEGlAwrG8yXGXRjW32fGbg66JAlOAwbObuqVoJpv/mRgoWDQfgH1wDPvtzWyUSNAXBGSk8h755YDbbcEy3SH2Q==}
 
   spinnies@https://codeload.github.com/lyswhut/spinnies/tar.gz/233305c58694aa3b053e3ab9af9049993f918b9d:
-    resolution: {gitHosted: true, tarball: https://codeload.github.com/lyswhut/spinnies/tar.gz/233305c58694aa3b053e3ab9af9049993f918b9d}
+    resolution: {gitHosted: true, integrity: sha512-LUDZiqvmJcQV3CeXioT1YxdQLPbdUjI5THT+mSa7b+ratzfxpoTS8Qz+hNcyy58XFs+F19UEZC/LYxvXL7UXYA==, tarball: https://codeload.github.com/lyswhut/spinnies/tar.gz/233305c58694aa3b053e3ab9af9049993f918b9d}
     version: 0.5.1
 
   sprintf-js@1.1.3:

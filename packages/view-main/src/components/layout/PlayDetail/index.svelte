@@ -123,14 +123,22 @@
         }
       }
       .bg {
-        background-size: 125% 125%;
+        background-size: cover;
+        background-position: center;
+        opacity: 1;
+        filter: saturate(1.28) contrast(1.06) brightness(0.9);
         &::before {
-          background-color: var(--color-content-background);
-          opacity: 0.7;
+          background: radial-gradient(
+            120% 90% at 50% 38%,
+            transparent 0%,
+            transparent 42%,
+            var(--color-content-background) 100%
+          );
+          opacity: 0.88;
         }
         &::after {
           background-color: transparent;
-          backdrop-filter: blur(30px);
+          backdrop-filter: blur(52px) saturate(1.4);
         }
       }
     }
