@@ -535,7 +535,7 @@
   "settings.desktop_lyric.line_gap_add": "Increase spacing",
   "settings.desktop_lyric.line_gap_dec": "Decrease spacing",
   "settings.desktop_lyric.lock": "Lock lyric window",
-  "settings.desktop_lyric.lock_screen": "Do not allow lyric window to be dragged out of main screen",
+  "settings.desktop_lyric.lock_screen": "Do not allow lyric window to be dragged off-screen",
   "settings.desktop_lyric.miniPlayer": "Mini player mode settings",
   "settings.desktop_lyric.miniPlayer_lyric_hide": "Hide lyrics",
   "settings.desktop_lyric.miniPlayer_lyric_show": "Show lyrics",

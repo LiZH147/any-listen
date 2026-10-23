@@ -1,8 +1,53 @@
+import { screen } from 'electron'
+
 import { appState } from '@/app'
 
 // 设置窗口位置、大小
 export let minWidth = 38
 export let minHeight = 38
+
+/**
+ * 获取所有显示器可用工作区的并集
+ *
+ * 多显示器场景下不能只用主屏尺寸做边界，否则窗口会被锁在主屏内无法拖到副屏。
+ * 这里返回覆盖全部屏幕的外接矩形，保证窗口不会丢到屏幕之外，同时允许跨屏移动。
+ */
+const getWorkAreaInfo = (): { area: Electron.Rectangle; displays: Electron.Display[] } | null => {
+  try {
+    const displays = screen.getAllDisplays()
+    if (displays.length) {
+      let minX = Infinity
+      let minY = Infinity
+      let maxX = -Infinity
+      let maxY = -Infinity
+      for (const display of displays) {
+        const { x, y, width, height } = display.workArea
+        if (x < minX) minX = x
+        if (y < minY) minY = y
+        if (x + width > maxX) maxX = x + width
+        if (y + height > maxY) maxY = y + height
+      }
+      return { area: { x: minX, y: minY, width: maxX - minX, height: maxY - minY }, displays }
+    }
+  } catch {
+    // electron 尚未 ready 时 screen 不可用，回退到主屏尺寸
+  }
+  const workAreaSize = appState.envParams.workAreaSize
+  if (!workAreaSize) return null
+  return { area: { x: 0, y: 0, width: workAreaSize.width, height: workAreaSize.height }, displays: [] }
+}
+
+// 判断窗口是否与至少一个显示器有交集
+const isVisibleOnAnyDisplay = (rect: Electron.Rectangle, displays: Electron.Display[]) => {
+  return displays.some(({ workArea }) => {
+    return (
+      rect.x < workArea.x + workArea.width &&
+      rect.x + rect.width > workArea.x &&
+      rect.y < workArea.y + workArea.height &&
+      rect.y + rect.height > workArea.y
+    )
+  })
+}
 
 // const updateBounds = (bounds: Bounds) => {
 //   bounds.x = bounds.x
@@ -23,24 +68,38 @@ export const getLyricWindowBounds = (
   if (h < minHeight) h = minHeight
 
   if (appState.appSetting['desktopLyric.isLockScreen']) {
-    if (!appState.envParams.workAreaSize) return bounds
-    const maxWinW = appState.envParams.workAreaSize.width
-    const maxWinH = appState.envParams.workAreaSize.height
+    const workAreaInfo = getWorkAreaInfo()
+    if (!workAreaInfo) return bounds
+    const workArea = workAreaInfo.area
 
-    if (w > maxWinW) w = maxWinW
-    if (h > maxWinH) h = maxWinH
-
-    const maxX = appState.envParams.workAreaSize.width - w
-    const maxY = appState.envParams.workAreaSize.height - h
+    // 窗口不能大于整个可用的桌面区域
+    if (w > workArea.width) w = workArea.width
+    if (h > workArea.height) h = workArea.height
 
     x += bounds.x
     y += bounds.y
 
+    const minX = workArea.x
+    const minY = workArea.y
+    const maxX = workArea.x + workArea.width - w
+    const maxY = workArea.y + workArea.height - h
+
     if (x > maxX) x = maxX
-    else if (x < 0) x = 0
+    else if (x < minX) x = minX
 
     if (y > maxY) y = maxY
-    else if (y < 0) y = 0
+    else if (y < minY) y = minY
+
+    // 显示器排列不规整时，并集区域内可能存在实际没有屏幕的空洞，
+    // 窗口若完全落在空洞里就会“消失”，此时贴回最近的显示器
+    if (workAreaInfo.displays.length && !isVisibleOnAnyDisplay({ x, y, width: w, height: h }, workAreaInfo.displays)) {
+      const display = screen.getDisplayNearestPoint({ x: Math.round(x + w / 2), y: Math.round(y + h / 2) })
+      const area = display.workArea
+      if (w > area.width) w = area.width
+      if (h > area.height) h = area.height
+      x = Math.min(Math.max(x, area.x), area.x + area.width - w)
+      y = Math.min(Math.max(y, area.y), area.y + area.height - h)
+    }
   } else {
     y += bounds.y
     x += bounds.x
