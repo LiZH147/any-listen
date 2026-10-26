@@ -66,6 +66,8 @@ export const DATA_KEYS = {
   searchSetting: 'searchSetting',
 
   lastStartInfo: 'lastStartInfo',
+
+  windowBounds: 'windowBounds',
 } as const
 
 export const DEFAULT_SETTING = {

@@ -1,14 +1,15 @@
 import path from 'node:path'
 
-import { DEV_SERVER_PORTS } from '@any-listen/common/constants'
+import { DEV_SERVER_PORTS, DATA_KEYS, STORE_NAMES } from '@any-listen/common/constants'
 import { getPlatform, getOSVersion } from '@any-listen/nodejs/index'
-import { BrowserWindow, Notification, dialog, session } from 'electron'
+import { BrowserWindow, Notification, dialog, screen, session } from 'electron'
 
 import { appState } from '@/app'
 import { collectMusic, uncollectMusic } from '@/modules/player'
 import { themeState } from '@/modules/theme'
 import { encodePath } from '@/shared/electron'
-import { openDevTools as handleOpenDevTools, throttle } from '@/shared/utils'
+import { getStore } from '@/shared/store'
+import { debounce, openDevTools as handleOpenDevTools, throttle } from '@/shared/utils'
 
 import { winMainEvent } from './event'
 import { rendererIPC } from './rendererEvent'
@@ -16,6 +17,62 @@ import { winMainState } from './state'
 import { createTaskBarButtons, getWindowSizeInfo } from './utils'
 
 let browserWindow: Electron.BrowserWindow | null = null
+
+/** 窗口可缩放到的最小尺寸，与 view-main 布局的 650x400 约束保持一致 */
+const MIN_WINDOW_WIDTH = 650
+const MIN_WINDOW_HEIGHT = 400
+
+interface SavedWindowBounds {
+  width: number
+  height: number
+}
+
+/**
+ * 本次启动从存储恢复的窗口尺寸
+ *
+ * 屏幕缩放比例会把尺寸取整，恢复后的实际尺寸与保存值可能相差 1~2px，
+ * 需要靠这个值把取整误差和用户的真实调整区分开。
+ */
+let restoredWindowSize: SavedWindowBounds | null = null
+
+/** 读取用户上次调整后的窗口尺寸，没有保存过则返回 null */
+const getRestoredWindowBounds = (): SavedWindowBounds | null => {
+  let saved: SavedWindowBounds | null = null
+  try {
+    const raw = getStore(STORE_NAMES.DATA).get<SavedWindowBounds>(DATA_KEYS.windowBounds)
+    if (raw && Number.isFinite(raw.width) && Number.isFinite(raw.height)) {
+      saved = { width: Math.round(raw.width), height: Math.round(raw.height) }
+    }
+  } catch {}
+  if (!saved) return null
+  let { width, height } = saved
+  // 显示器分辨率可能在两次启动之间发生变化（如拔掉外接屏），恢复前按当前主屏工作区夹一下
+  try {
+    const { workArea } = screen.getPrimaryDisplay()
+    width = Math.min(width, workArea.width)
+    height = Math.min(height, workArea.height)
+  } catch {}
+  return {
+    width: Math.max(width, MIN_WINDOW_WIDTH),
+    height: Math.max(height, MIN_WINDOW_HEIGHT),
+  }
+}
+
+const saveWindowBounds = debounce(() => {
+  if (!browserWindow) return
+  // 全屏、最大化、最小化时的尺寸不是用户想要的窗口尺寸，不应保存
+  if (winMainState.isFullScreen || browserWindow.isMaximized() || browserWindow.isMinimized()) return
+  const { width, height } = browserWindow.getBounds()
+  if (restoredWindowSize) {
+    // 与恢复值只差一两个像素时属于屏幕缩放取整误差，不是用户调整的结果。
+    // 若把它保存下来，窗口尺寸会在每次启动后继续变大。
+    if (Math.abs(width - restoredWindowSize.width) < 3 && Math.abs(height - restoredWindowSize.height) < 3) return
+    restoredWindowSize = null
+  }
+  try {
+    getStore(STORE_NAMES.DATA).set<SavedWindowBounds>(DATA_KEYS.windowBounds, { width, height })
+  } catch {}
+}, 500)
 
 const winEvent = () => {
   if (!browserWindow) return
@@ -54,10 +111,10 @@ const winEvent = () => {
     winMainState.isFullScreen = false
     winMainEvent.fullscreen(false)
 
-    // macOS needs here to set resizable to false after exiting full screen
+    // macOS 退出全屏后会丢失窗口可调整大小的状态，需要重新打开
     if (import.meta.env.VITE_IS_MAC) {
-      if (browserWindow?.resizable) {
-        browserWindow.setResizable(false)
+      if (browserWindow && !browserWindow.isResizable()) {
+        browserWindow.setResizable(true)
       }
     }
   })
@@ -94,6 +151,9 @@ const winEvent = () => {
   browserWindow.on('hide', () => {
     winMainEvent.hide()
   })
+
+  // 记录用户手动拖拽边缘调整后的窗口尺寸
+  browserWindow.on('resize', saveWindowBounds)
 }
 
 export const createWindow = () => {
@@ -117,13 +177,17 @@ export const createWindow = () => {
     height: windowSizeInfo.height,
     useContentSize: true,
     width: windowSizeInfo.width,
+    minWidth: MIN_WINDOW_WIDTH,
+    minHeight: MIN_WINDOW_HEIGHT,
     frame: false,
     transparent: !appState.envParams.cmdParams.dt,
     hasShadow: appState.envParams.cmdParams.dt,
     // enableRemoteModule: false,
     // icon: join(appState.__static, isWin ? 'icons/256x256.ico' : 'icons/512x512.png'),
     roundedCorners: appState.envParams.cmdParams.dt,
-    resizable: false,
+    // 允许通过拖拽窗口边缘调整大小。透明无边框窗口同样有原生缩放边框，
+    // 只有 Linux 需要先让窗口可调整大小才能进入全屏，见 setFullScreen
+    resizable: true,
     maximizable: false,
     fullscreenable: true,
     show: false,
@@ -149,9 +213,15 @@ export const createWindow = () => {
   if (appState.appSetting['common.startInFullscreen']) {
     options.fullscreen = true
     winMainState.isFullScreen = true
-    if (import.meta.env.VITE_IS_LINUX) options.resizable = true
   }
   browserWindow = new BrowserWindow(options)
+
+  // 恢复用户上次拖拽调整后的窗口尺寸。窗口此时还没有显示，调整不会闪烁
+  const restoredBounds = getRestoredWindowBounds()
+  if (restoredBounds) {
+    restoredWindowSize = restoredBounds
+    browserWindow.setBounds(restoredBounds)
+  }
 
   const winURL = import.meta.env.DEV
     ? `http://localhost:${DEV_SERVER_PORTS['view-main']}`
@@ -279,12 +349,12 @@ export const setFullScreen = (isFullscreen: boolean): boolean => {
   if (appState.envParams.cmdParams.dt || import.meta.env.VITE_IS_LINUX) {
     // linux 需要先设置为可调整窗口大小才能全屏
     if (isFullscreen) {
-      browserWindow.setResizable(isFullscreen)
-      browserWindow.setFullScreen(isFullscreen)
+      browserWindow.setResizable(true)
+      browserWindow.setFullScreen(true)
     } else {
-      browserWindow.setFullScreen(isFullscreen)
-      // windows/linux need to set resizable to true after exiting full screen
-      if (!import.meta.env.VITE_IS_MAC) browserWindow.setResizable(isFullscreen)
+      browserWindow.setFullScreen(false)
+      // windows/linux 退出全屏后需要重新打开可调整大小，否则窗口之后无法再拖拽边缘缩放
+      if (!import.meta.env.VITE_IS_MAC) browserWindow.setResizable(true)
     }
   } else {
     browserWindow.setFullScreen(isFullscreen)
